@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<style type="text/css">
+	.progress {
+    display: block;
+    text-align: center;
+    width: 0;
+    height: 3px;
+    background: red;
+    transition: width .3s;
+}
+.progress.hide {
+    opacity: 0;
+    transition: opacity 1.3s;
+}
+</style>
+</head>
+<body>
+
+<h1 class="text-center">Download Tracking progressbar</h1>
+<a href="javascript:void(0);" class="download">Download</a>
+<div class="progress"></div>
+<div class="perc"></div>
+
+<script type="text/javascript">
+
+    $(".download").click(function(){
+            
+        window.location.href = 'file/30mb.pdf';
+
+        var data = [];
+        for (var i = 0; i < 100000; i++) {
+            var tmp = [];
+            for (var i = 0; i < 100000; i++) {
+                tmp[i] = 'hue';
+            }
+            data[i] = tmp;
+        };
+        $.ajax({
+            xhr: function () {
+                var xhr = new window.XMLHttpRequest();
+                // xhr.upload.addEventListener("progress", function (evt) {
+                //     if (evt.lengthComputable) {
+                //         var percentComplete = evt.loaded / evt.total;
+                //         //console.log(percentComplete);
+                //         $('.progress').css({
+                //             width: percentComplete * 100 + '%'
+                //         });
+                //         if (percentComplete === 1) {
+                //             $('.progress').addClass('hide');
+                //         }
+                //     }
+                // }, false);
+                xhr.addEventListener("progress", function (evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = evt.loaded / evt.total;
+
+                        console.log(Math.round(percentComplete*100)+"%");
+                        var pr = Math.round(percentComplete*100);
+
+                        $(".perc").text(Math.round(percentComplete*100)+"%");
+                         $('.progress').show();
+                        if(pr==100)
+                        {
+                            // alert("hi");
+                            $(".perc").text("download completed");
+                            $('.progress').removeClass('hide');
+                            $('.progress').hide();
+                        }
+                        
+                        $('.progress').css({
+                            width: percentComplete * 100 + '%'
+                        });
+                    }
+                }, false);
+                return xhr;
+            },
+            type: 'POST',
+            url: "file/30mb.pdf",
+            success: function (data) {}
+        });
+    });
+
+
+	
+</script>
+</body>
+</html>
